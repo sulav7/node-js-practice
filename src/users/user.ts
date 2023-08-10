@@ -13,7 +13,9 @@ export interface IUser extends Model {
   age: number;
   email: string;
   password: string;
+  token: string;
   verify: boolean;
+  resetToken: string;
 }
 
 @Table
@@ -38,6 +40,15 @@ class User extends Model implements IUser {
   @AllowNull(false)
   @Column
   password: string;
+
+  @Unique(true)
+  @AllowNull(false)
+  @Column
+  token: string;
+
+  @AllowNull(true)
+  @Column
+  resetToken: string;
 
   @Default(false)
   @Column

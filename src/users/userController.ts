@@ -1,5 +1,6 @@
 import express from "express";
 import { userService } from ".";
+
 import { IUser } from "./user";
 
 class UserController {
@@ -98,6 +99,54 @@ class UserController {
       return res.status(err.status).json({
         message: err.message,
       });
+    }
+  }
+
+  async pagination(req: express.Request, res: express.Response) {
+    try {
+      const limit = req.query.limit;
+      const offset = req.query.offset;
+
+      const pagination = await userService.paginateUser(limit, offset);
+      return res.status(200).json({
+        message: "user paginated",
+        statusCode: 200,
+        result: pagination,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async verify(req: express.Request, res: express.Response) {
+    try {
+      const token = req.params.token;
+      const verifyUser = await userService.verifyUser(token);
+      return res.status(200).json({
+        message: "user verified",
+        statusCode: 200,
+        result: verifyUser,
+      });
+    } catch (err: any) {
+      return res.status(err.status).json({
+        message: err.message,
+        code: err.code,
+      });
+    }
+  }
+
+  async forgotPassword(req: express.Request, res: express.Response) {
+    try {
+      const email = req.body.email;
+      const data = req.body;
+      const forgotPassword = await userService.forgotPassword(email, data);
+      return res.status(200).json({
+        message: "",
+        statusCode: 200,
+        result: forgotPassword,
+      });
+    } catch (err) {
+      console.log(err);
     }
   }
 }
